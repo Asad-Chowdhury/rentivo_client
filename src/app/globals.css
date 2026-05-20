@@ -9,16 +9,22 @@
 }
 
 :root,
-:root:has(input.theme-controller[value="light"]:checked),
-:root:has(input.theme-controller[value="dark"]:checked),
-[data-theme="light"],
 [data-theme="dark"] {
-  --color-primary: #b6ff00;
-  --color-primary-content: #0a0a0a;
-  --color-secondary: #0a0a0a;
+  --color-primary: #34d399;
+  --color-primary-content: #052e1a;
+  --color-secondary: #9ca3af;
+  --color-secondary-content: #111827;
+  --color-accent: #10b981;
+  --color-accent-content: #052e1a;
+}
+
+[data-theme="light"] {
+  --color-primary: #047857;
+  --color-primary-content: #ffffff;
+  --color-secondary: #1f2937;
   --color-secondary-content: #ffffff;
-  --color-accent: #7cff2b;
-  --color-accent-content: #0a0a0a;
+  --color-accent: #065f46;
+  --color-accent-content: #ffffff;
 }
 
 html {

@@ -10,9 +10,12 @@ import {
 } from "react-icons/fi";
 
 const statusStyles = {
-  Confirmed: "badge-success",
-  Pending: "badge-warning",
-  Cancelled: "badge-error",
+  Confirmed:
+    "border border-blue-500/20 bg-blue-500/15 text-blue-600",
+  Pending:
+    "border border-amber-500/20 bg-amber-500/15 text-amber-600",
+  Cancelled:
+    "border border-red-500/20 bg-red-500/15 text-red-600",
 };
 
 const BookingCard = ({ booking }) => {
