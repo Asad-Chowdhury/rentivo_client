@@ -1,16 +1,52 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FiFilter, FiSearch } from "react-icons/fi";
 import CarCard from "./CarCard";
 
-const ExploreCarsClient = ({ cars, carTypes }) => {
+const ExploreCarsClient = () => {
+  const [cars, setCars] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedType, setSelectedType] = useState("All");
 
+  useEffect(() => {
+    const loadCars = async () => {
+      try {
+        setIsLoading(true);
+        setErrorMessage("");
+
+        const response = await fetch("http://localhost:5001/car-listing");
+
+        if (!response.ok) {
+          throw new Error("Failed to load cars");
+        }
+
+        const data = await response.json();
+        setCars(data);
+      } catch (error) {
+        console.error("explore cars load error:", error);
+        setErrorMessage(error.message || "Failed to load cars");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadCars();
+  }, []);
+
+  const carTypes = useMemo(() => {
+    const uniqueTypes = cars
+      .map((car) => car.carType)
+      .filter(Boolean);
+
+    return ["All", ...new Set(uniqueTypes)];
+  }, [cars]);
+
   const filteredCars = useMemo(() => {
     return cars.filter((car) => {
-      const matchesSearch = car.carName
+      const matchesSearch = (car.carName || "")
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
       const matchesType = selectedType === "All" || car.carType === selectedType;
@@ -62,13 +98,24 @@ const ExploreCarsClient = ({ cars, carTypes }) => {
           </label>
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-          {filteredCars.map((car) => (
-            <CarCard key={car.id} car={car} showDescription />
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="flex min-h-72 items-center justify-center rounded-lg border border-base-300 bg-base-200">
+            <span className="loading loading-spinner loading-lg text-primary" />
+          </div>
+        ) : errorMessage ? (
+          <div className="rounded-lg border border-error/30 bg-error/10 p-8 text-center">
+            <h2 className="text-xl font-semibold">Unable to load cars</h2>
+            <p className="mt-2 text-sm text-base-content/70">{errorMessage}</p>
+          </div>
+        ) : (
+          <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+            {filteredCars.map((car) => (
+              <CarCard key={car._id || car.id} car={car} showDescription />
+            ))}
+          </div>
+        )}
 
-        {filteredCars.length === 0 ? (
+        {!isLoading && !errorMessage && filteredCars.length === 0 ? (
           <div className="mt-8 rounded-lg border border-base-300 bg-base-200 p-8 text-center">
             <h2 className="text-xl font-semibold">No cars found</h2>
             <p className="mt-2 text-sm text-base-content/70">

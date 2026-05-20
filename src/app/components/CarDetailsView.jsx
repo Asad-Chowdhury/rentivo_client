@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FiCalendar,
   FiCheckCircle,
@@ -12,8 +12,71 @@ import {
   FiUsers,
 } from "react-icons/fi";
 
-const CarDetailsView = ({ car }) => {
+const getCarId = (car) => {
+  if (car.id) return car.id;
+  if (!car._id) return "";
+  if (typeof car._id === "string") return car._id;
+  if (car._id.$oid) return car._id.$oid;
+
+  return String(car._id);
+};
+
+const CarDetailsView = ({ carId }) => {
+  const [car, setCar] = useState(null);
+  const [isLoading, setIsLoading] = useState(Boolean(carId));
+  const [errorMessage, setErrorMessage] = useState("");
   const [isBookingOpen, setIsBookingOpen] = useState(false);
+
+  useEffect(() => {
+    if (!carId) return;
+
+    const loadCar = async () => {
+      try {
+        setIsLoading(true);
+        setErrorMessage("");
+
+        const response = await fetch("http://localhost:5001/car-listing");
+
+        if (!response.ok) {
+          throw new Error("Failed to load car details");
+        }
+
+        const data = await response.json();
+        const foundCar = data.find((item) => getCarId(item) === carId);
+        setCar(foundCar || null);
+      } catch (error) {
+        console.error("car details load error:", error);
+        setErrorMessage(error.message || "Failed to load car details");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadCar();
+  }, [carId]);
+
+  if (isLoading) {
+    return (
+      <section className="flex min-h-[calc(100vh-65px)] items-center justify-center bg-base-100 px-4 py-16 text-base-content">
+        <span className="loading loading-spinner loading-lg text-primary" />
+      </section>
+    );
+  }
+
+  if (errorMessage) {
+    return (
+      <section className="flex min-h-[calc(100vh-65px)] items-center justify-center bg-base-100 px-4 py-16 text-base-content">
+        <div className="max-w-md text-center">
+          <FiTruck className="mx-auto text-error" size={42} />
+          <h1 className="mt-5 text-2xl font-bold">Unable to load car</h1>
+          <p className="mt-2 text-sm text-base-content/70">{errorMessage}</p>
+          <Link href="/explore-cars" className="btn btn-primary mt-6">
+            Back to Explore Cars
+          </Link>
+        </div>
+      </section>
+    );
+  }
 
   if (!car) {
     return (
@@ -74,10 +137,8 @@ const CarDetailsView = ({ car }) => {
               </div>
               <div className="rounded-lg border border-base-300 bg-base-200 p-4">
                 <FiTruck className="text-primary" size={20} />
-                <p className="mt-2 text-sm text-base-content/60">
-                  Transmission
-                </p>
-                <p className="text-xl font-semibold">{car.transmission}</p>
+                <p className="mt-2 text-sm text-base-content/60">Car Type</p>
+                <p className="text-xl font-semibold">{car.carType}</p>
               </div>
               <div className="rounded-lg border border-base-300 bg-base-200 p-4">
                 <FiMapPin className="text-primary" size={20} />

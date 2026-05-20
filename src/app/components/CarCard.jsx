@@ -2,7 +2,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { FiMapPin, FiTag, FiUsers } from "react-icons/fi";
 
+const getCarId = (car) => {
+  if (car.id) return car.id;
+  if (!car._id) return "";
+  if (typeof car._id === "string") return car._id;
+  if (car._id.$oid) return car._id.$oid;
+
+  return String(car._id);
+};
+
 const CarCard = ({ car, showDescription = false }) => {
+  const carId = getCarId(car);
+
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-lg border border-base-300 bg-base-200 shadow-sm">
       <div className="relative aspect-[16/10] bg-base-300">
@@ -56,7 +67,7 @@ const CarCard = ({ car, showDescription = false }) => {
           </p>
         </div>
 
-        <Link href={`/cars/${car.id}`} className="btn btn-primary mt-5">
+        <Link href={`/cars/${carId}`} className="btn btn-primary mt-5">
           View Details
         </Link>
       </div>

@@ -86,7 +86,7 @@ const MyAddedCarPage = () => {
       setIsDeleting(true);
 
       const response = await fetch(
-        `http://localhost:5001/car-listing/${encodeURIComponent(carId)}`,
+        `http://localhost:5001/car-listing/${carId}`,
         {
           method: "DELETE",
         },
