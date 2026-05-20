@@ -30,6 +30,46 @@ const Logo = ({ className = "" }) => {
   );
 };
 
+const ProfileDropdown = () => {
+  return (
+    <div className="dropdown dropdown-end">
+      <motion.button
+        tabIndex={0}
+        type="button"
+        className="btn btn-ghost btn-circle"
+        aria-label="Open user menu"
+        whileHover={{ scale: 1.06 }}
+        whileTap={{ scale: 0.94 }}
+      >
+        <span className="flex size-10 items-center justify-center rounded-full bg-primary text-primary-content">
+          <FiUser size={20} />
+        </span>
+      </motion.button>
+
+      <ul
+        tabIndex={0}
+        className="menu dropdown-content z-50 mt-3 w-56 rounded-box border border-base-300 bg-base-100 p-2 shadow"
+      >
+        {profileLinks.map((link) => (
+          <motion.li
+            key={link.href}
+            whileHover={{ x: 4 }}
+            transition={{ type: "spring", stiffness: 350, damping: 25 }}
+          >
+            <Link href={link.href}>{link.label}</Link>
+          </motion.li>
+        ))}
+        <motion.li
+          whileHover={{ x: 4 }}
+          transition={{ type: "spring", stiffness: 350, damping: 25 }}
+        >
+          <button type="button">Logout</button>
+        </motion.li>
+      </ul>
+    </div>
+  );
+};
+
 const Navbar = () => {
   const isLoggedIn = false;
 
@@ -93,45 +133,20 @@ const Navbar = () => {
         <ThemeSwitcher />
 
         {isLoggedIn ? (
-          <div className="dropdown dropdown-end">
-            <motion.button
-              tabIndex={0}
-              type="button"
-              className="btn btn-ghost btn-circle avatar placeholder"
-              aria-label="Open user menu"
-              whileHover={{ scale: 1.06 }}
-              whileTap={{ scale: 0.94 }}
-            >
-              <div className="w-10 rounded-full bg-primary text-primary-content">
-                <FiUser size={20} />
-              </div>
-            </motion.button>
-            <ul
-              tabIndex={0}
-              className="menu dropdown-content z-50 mt-3 w-56 rounded-box border border-base-300 bg-base-100 p-2 shadow"
-            >
-              {profileLinks.map((link) => (
-                <motion.li
-                  key={link.href}
-                  whileHover={{ x: 4 }}
-                  transition={{ type: "spring", stiffness: 350, damping: 25 }}
-                >
-                  <Link href={link.href}>{link.label}</Link>
-                </motion.li>
-              ))}
-              <motion.li
-                whileHover={{ x: 4 }}
-                transition={{ type: "spring", stiffness: 350, damping: 25 }}
-              >
-                <button type="button">Logout</button>
-              </motion.li>
-            </ul>
-          </div>
+          <ProfileDropdown />
         ) : (
           <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
-            <Link href="/login" className="btn btn-primary btn-sm sm:btn-md">
-              Login
-            </Link>
+            <div className="flex gap-5">
+              <Link href="/login" className="btn btn-primary btn-sm sm:btn-md">
+                Login
+              </Link>
+              <Link
+                href="/register"
+                className="btn btn-primary btn-sm sm:btn-md"
+              >
+                Register
+              </Link>
+            </div>
           </motion.div>
         )}
       </div>
