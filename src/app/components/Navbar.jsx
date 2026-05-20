@@ -1,0 +1,142 @@
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { FiMenu, FiUser } from "react-icons/fi";
+import logo from "../../../public/assets/rentivo-logo.png";
+import ThemeSwitcher from "./ThemeSwitcher";
+
+const navLinks = [
+  { label: "Home", href: "/" },
+  { label: "Explore Cars", href: "/cars" },
+  { label: "Add Car", href: "/add-car" },
+  { label: "My Bookings", href: "/my-bookings" },
+];
+
+const profileLinks = [
+  { label: "Add Car", href: "/add-car" },
+  { label: "My Bookings", href: "/my-bookings" },
+  { label: "My Added Cars", href: "/my-cars" },
+];
+
+const Logo = ({ className = "" }) => {
+  return (
+    <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
+      <Link href="/" className={`block ${className}`} aria-label="Rentivo home">
+        <Image src={logo} alt="Rentivo" height={25} width={150} />
+      </Link>
+    </motion.div>
+  );
+};
+
+const Navbar = () => {
+  const isLoggedIn = false;
+
+  return (
+    <motion.nav
+      className="navbar sticky top-0 z-50 border-b border-base-300 bg-base-100/95 px-4 shadow-sm backdrop-blur lg:px-8"
+      initial={{ y: -16, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.28, ease: "easeOut" }}
+    >
+      <div className="navbar-start">
+        <div className="dropdown lg:hidden">
+          <motion.button
+            tabIndex={0}
+            type="button"
+            className="btn btn-ghost btn-circle"
+            aria-label="Open navigation menu"
+            whileHover={{ scale: 1.06 }}
+            whileTap={{ scale: 0.94 }}
+          >
+            <FiMenu size={22} />
+          </motion.button>
+          <ul
+            tabIndex={0}
+            className="menu dropdown-content menu-sm z-50 mt-3 w-56 rounded-box border border-base-300 bg-base-100 p-2 shadow"
+          >
+            {navLinks.map((link) => (
+              <motion.li
+                key={link.href}
+                whileHover={{ x: 4 }}
+                transition={{ type: "spring", stiffness: 350, damping: 25 }}
+              >
+                <Link href={link.href}>{link.label}</Link>
+              </motion.li>
+            ))}
+          </ul>
+        </div>
+
+        <Logo className="hidden lg:block lg:" />
+      </div>
+
+      <div className="navbar-center">
+        <Logo className="lg:hidden" />
+
+        <div className="hidden lg:flex">
+          <ul className="menu menu-horizontal gap-1 px-1">
+            {navLinks.map((link) => (
+              <motion.li
+                key={link.href}
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: 0.97 }}
+              >
+                <Link href={link.href}>{link.label}</Link>
+              </motion.li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <div className="navbar-end gap-2">
+        <ThemeSwitcher />
+
+        {isLoggedIn ? (
+          <div className="dropdown dropdown-end">
+            <motion.button
+              tabIndex={0}
+              type="button"
+              className="btn btn-ghost btn-circle avatar placeholder"
+              aria-label="Open user menu"
+              whileHover={{ scale: 1.06 }}
+              whileTap={{ scale: 0.94 }}
+            >
+              <div className="w-10 rounded-full bg-primary text-primary-content">
+                <FiUser size={20} />
+              </div>
+            </motion.button>
+            <ul
+              tabIndex={0}
+              className="menu dropdown-content z-50 mt-3 w-56 rounded-box border border-base-300 bg-base-100 p-2 shadow"
+            >
+              {profileLinks.map((link) => (
+                <motion.li
+                  key={link.href}
+                  whileHover={{ x: 4 }}
+                  transition={{ type: "spring", stiffness: 350, damping: 25 }}
+                >
+                  <Link href={link.href}>{link.label}</Link>
+                </motion.li>
+              ))}
+              <motion.li
+                whileHover={{ x: 4 }}
+                transition={{ type: "spring", stiffness: 350, damping: 25 }}
+              >
+                <button type="button">Logout</button>
+              </motion.li>
+            </ul>
+          </div>
+        ) : (
+          <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
+            <Link href="/login" className="btn btn-primary btn-sm sm:btn-md">
+              Login
+            </Link>
+          </motion.div>
+        )}
+      </div>
+    </motion.nav>
+  );
+};
+
+export default Navbar;
