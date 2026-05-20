@@ -21,12 +21,27 @@ const formatPrice = (price) => {
   return `$${Number(price).toLocaleString()}`;
 };
 
+const getCarId = (car) => {
+  if (!car?._id) return "";
+
+  if (typeof car._id === "string") {
+    return car._id;
+  }
+
+  if (car._id.$oid) {
+    return car._id.$oid;
+  }
+
+  return String(car._id);
+};
+
 const MyAddedCarPage = () => {
   const { data: session, isPending } = authClient.useSession();
   const userId = session?.user?.id;
 
   const [cars, setCars] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [selectedCar, setSelectedCar] = useState(null);
   const [editingCar, setEditingCar] = useState(null);
@@ -63,6 +78,62 @@ const MyAddedCarPage = () => {
 
     loadCars();
   }, [isPending, userId]);
+
+  const handleDelete = async (carId) => {
+    if (!carId) return;
+
+    try {
+      setIsDeleting(true);
+
+      const response = await fetch(
+        `http://localhost:5001/car-listing/${encodeURIComponent(carId)}`,
+        {
+          method: "DELETE",
+        },
+      );
+
+      const responseText = await response.text();
+      let result = {};
+
+      if (responseText) {
+        try {
+          result = JSON.parse(responseText);
+        } catch {
+          result = { message: responseText };
+        }
+      }
+
+      if (!response.ok) {
+        throw new Error(
+          result.message ||
+            `Failed to delete car listing. Status: ${response.status}`,
+        );
+      }
+
+      if (result.deletedCount > 0 || result.acknowledged) {
+        setCars((currentCars) =>
+          currentCars.filter((car) => getCarId(car) !== carId),
+        );
+        setSelectedCar(null);
+        return;
+      }
+
+      throw new Error("Car listing was not deleted");
+    } catch (error) {
+      console.error("delete car error:", error);
+      alert(error.message || "Failed to delete car listing");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleUpdateSuccess = (carId, updatedCarData) => {
+    setCars((currentCars) =>
+      currentCars.map((car) =>
+        getCarId(car) === carId ? { ...car, ...updatedCarData } : car,
+      ),
+    );
+  };
 
   return (
     <section className="min-h-[calc(100vh-65px)] bg-base-100 px-4 py-10 text-base-content sm:px-6 lg:px-8">
@@ -194,6 +265,7 @@ const MyAddedCarPage = () => {
           <UpdateCarModal
             car={editingCar}
             onClose={() => setEditingCar(null)}
+            onUpdated={handleUpdateSuccess}
           />
         )}
 
@@ -227,10 +299,11 @@ const MyAddedCarPage = () => {
                 <button
                   type="button"
                   className="btn btn-error"
-                  onClick={() => setSelectedCar(null)}
+                  disabled={isDeleting}
+                  onClick={() => handleDelete(getCarId(selectedCar))}
                 >
                   <FiTrash2 size={16} />
-                  Delete from listing
+                  {isDeleting ? "Deleting..." : "Delete from listing"}
                 </button>
               </div>
             </div>

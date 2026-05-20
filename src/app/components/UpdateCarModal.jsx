@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import {
   FiFileText,
   FiImage,
@@ -18,9 +20,65 @@ const availabilityStatuses = [
   "Coming Soon",
 ];
 
-const UpdateCarModal = ({ car, onClose }) => {
-  const updateCarSubmitHandler = (event) => {
+const UpdateCarModal = ({ car, onClose, onUpdated }) => {
+  const router = useRouter();
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  const updateCarSubmitHandler = async (event) => {
     event.preventDefault();
+
+    const carId = car?._id;
+
+    if (!carId) {
+      alert("Car id is missing. Cannot update this listing.");
+      return;
+    }
+
+    const formData = new FormData(event.currentTarget);
+    const formValues = Object.fromEntries(formData.entries());
+    const updatedCarData = {
+      ...formValues,
+      dailyRentPrice: Number(formValues.dailyRentPrice),
+      seatCapacity: Number(formValues.seatCapacity),
+    };
+
+    try {
+      setIsUpdating(true);
+
+      const response = await fetch(
+        `http://localhost:5001/car-listing/${carId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(updatedCarData),
+        },
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to update car listing");
+      }
+
+      if (data.matchedCount > 0) {
+        onUpdated(carId, updatedCarData);
+        alert("Car Listing updated");
+        onClose();
+        router.refresh();
+        return;
+      }
+
+      throw new Error(
+        `No matching car was found on the server for _id: ${carId}`,
+      );
+    } catch (error) {
+      console.error("update car error:", error);
+      alert(error.message || "Failed to update car listing");
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
   return (
@@ -169,12 +227,17 @@ const UpdateCarModal = ({ car, onClose }) => {
           </div>
 
           <div className="modal-action mt-7 border-t border-base-300 pt-5">
-            <button type="button" className="btn btn-outline" onClick={onClose}>
+            <button
+              type="button"
+              className="btn btn-outline"
+              disabled={isUpdating}
+              onClick={onClose}
+            >
               Cancel
             </button>
-            <button type="submit" className="btn btn-primary">
+            <button type="submit" className="btn btn-primary" disabled={isUpdating}>
               <FiSave size={18} />
-              Update Car Listing
+              {isUpdating ? "Updating..." : "Update Car Listing"}
             </button>
           </div>
         </form>
@@ -184,7 +247,7 @@ const UpdateCarModal = ({ car, onClose }) => {
         type="button"
         className="modal-backdrop"
         aria-label="Close update car modal"
-        onClick={onClose}
+        onClick={isUpdating ? undefined : onClose}
       />
     </div>
   );
