@@ -1,31 +1,63 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { FiMoon, FiSun } from "react-icons/fi";
 
 const THEME_KEY = "theme";
 
-const getSavedTheme = () => {
+const isValidTheme = (theme) => {
+  return theme === "light" || theme === "dark";
+};
+
+const getStoredTheme = () => {
   if (typeof window === "undefined") {
     return "dark";
   }
 
   const storedTheme = window.localStorage.getItem(THEME_KEY);
 
-  return storedTheme === "light" || storedTheme === "dark"
-    ? storedTheme
-    : "dark";
+  return isValidTheme(storedTheme) ? storedTheme : "dark";
+};
+
+const getServerTheme = () => {
+  return "dark";
+};
+
+const subscribeToTheme = (callback) => {
+  const syncTheme = () => {
+    document.documentElement.setAttribute("data-theme", getStoredTheme());
+    callback();
+  };
+
+  syncTheme();
+  window.addEventListener("storage", syncTheme);
+  window.addEventListener("themechange", syncTheme);
+
+  return () => {
+    window.removeEventListener("storage", syncTheme);
+    window.removeEventListener("themechange", syncTheme);
+  };
+};
+
+const setStoredTheme = (theme) => {
+  document.documentElement.setAttribute("data-theme", theme);
+  window.localStorage.setItem(THEME_KEY, theme);
+  window.dispatchEvent(new Event("themechange"));
 };
 
 const ThemeSwitcher = () => {
-  const [theme, setTheme] = useState(getSavedTheme);
+  const theme = useSyncExternalStore(
+    subscribeToTheme,
+    getStoredTheme,
+    getServerTheme,
+  );
   const isDark = theme === "dark";
 
-  useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-    window.localStorage.setItem(THEME_KEY, theme);
-  }, [theme]);
+  const handleThemeChange = (event) => {
+    const nextTheme = event.target.checked ? "dark" : "light";
+    setStoredTheme(nextTheme);
+  };
 
   return (
     <label
@@ -36,7 +68,7 @@ const ThemeSwitcher = () => {
         type="checkbox"
         className="sr-only"
         checked={isDark}
-        onChange={(event) => setTheme(event.target.checked ? "dark" : "light")}
+        onChange={handleThemeChange}
       />
       <AnimatePresence mode="wait" initial={false}>
         <motion.span

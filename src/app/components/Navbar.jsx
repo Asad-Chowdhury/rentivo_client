@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { FiMenu, FiUser } from "react-icons/fi";
 import logo from "../../../public/assets/rentivo-logo.png";
 import ThemeSwitcher from "./ThemeSwitcher";
+import { authClient } from "@/lib/auth-client";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -30,7 +31,11 @@ const Logo = ({ className = "" }) => {
   );
 };
 
-const ProfileDropdown = () => {
+const ProfileDropdown = ({ session }) => {
+  const logOutHandler = async () => {
+    await authClient.signOut();
+  };
+
   return (
     <div className="dropdown dropdown-end">
       <motion.button
@@ -41,8 +46,18 @@ const ProfileDropdown = () => {
         whileHover={{ scale: 1.06 }}
         whileTap={{ scale: 0.94 }}
       >
-        <span className="flex size-10 items-center justify-center rounded-full bg-primary text-primary-content">
-          <FiUser size={20} />
+        <span className="flex size-10 items-center justify-center rounded-full bg-primary text-primary-content overflow-hidden cursor-pointer">
+          {session?.user?.image ? (
+            <Image
+            width={40}
+            height={40}
+              src={session.user.image}
+              alt={session.user.name || "User"}
+              className="size-10 rounded-full object-cover"
+            />
+          ) : (
+            <FiUser size={20} />
+          )}
         </span>
       </motion.button>
 
@@ -63,7 +78,9 @@ const ProfileDropdown = () => {
           whileHover={{ x: 4 }}
           transition={{ type: "spring", stiffness: 350, damping: 25 }}
         >
-          <button type="button">Logout</button>
+          <button type="button" onClick={logOutHandler}>
+            Logout
+          </button>
         </motion.li>
       </ul>
     </div>
@@ -71,7 +88,9 @@ const ProfileDropdown = () => {
 };
 
 const Navbar = () => {
-  const isLoggedIn = false;
+  const { data: session, isPending } = authClient.useSession();
+  const isLoggedIn = Boolean(session?.user);
+  console.log(session);
 
   return (
     <motion.nav
@@ -132,8 +151,8 @@ const Navbar = () => {
       <div className="navbar-end gap-2">
         <ThemeSwitcher />
 
-        {isLoggedIn ? (
-          <ProfileDropdown />
+        {isPending ? null : isLoggedIn ? (
+          <ProfileDropdown session={session} />
         ) : (
           <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
             <div className="flex gap-5">
