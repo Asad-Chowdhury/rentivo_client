@@ -144,11 +144,11 @@ const Register = () => {
                 </span>
                 <input
                   required
-                  minLength={8}
+                  minLength={6}
                   name="password"
                   type={showPassword ? "text" : "password"}
-                  pattern="(?=.*[A-Z])(?=.*[0-9]).{8,}"
-                  title="Must be at least 8 characters with 1 uppercase letter and 1 number"
+                  pattern="(?=.*[a-z])(?=.*[A-Z]).{6,}"
+                  title="Must be at least 6 characters with 1 uppercase letter and 1 lowercase letter"
                   placeholder="Enter your password"
                   className="input join-item input-bordered w-full bg-base-100"
                 />
@@ -162,7 +162,8 @@ const Register = () => {
                 </button>
               </div>
               <span className="block text-xs text-base-content/60">
-                Must be at least 8 characters with 1 uppercase and 1 number.
+                Must be at least 6 characters with 1 uppercase and 1 lowercase
+                letter.
               </span>
             </label>
 

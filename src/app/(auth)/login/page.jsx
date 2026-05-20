@@ -85,8 +85,11 @@ const Login = () => {
                 </span>
                 <input
                   required
+                  minLength={6}
                   name="password"
                   type={showPassword ? "text" : "password"}
+                  pattern="(?=.*[a-z])(?=.*[A-Z]).{6,}"
+                  title="Must be at least 6 characters with 1 uppercase letter and 1 lowercase letter"
                   placeholder="Enter your password"
                   className="input join-item input-bordered w-full bg-base-100"
                 />

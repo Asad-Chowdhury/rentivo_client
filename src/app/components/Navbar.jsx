@@ -10,15 +10,16 @@ import { authClient } from "@/lib/auth-client";
 
 const navLinks = [
   { label: "Home", href: "/" },
-  { label: "Explore Cars", href: "/cars" },
-  { label: "Add Car", href: "/add-car" },
-  { label: "My Bookings", href: "/my-bookings" },
+  { label: "Explore Cars", href: "/explore-cars" },
+  { label: "Add Car", href: "/add-car", authRequired: true },
+  { label: "My Bookings", href: "/my-bookings", authRequired: true },
+  { label: "My Added Cars", href: "/my-added-cars", authRequired: true },
 ];
 
 const profileLinks = [
   { label: "Add Car", href: "/add-car" },
+  { label: "My Added Cars", href: "/my-added-cars" },
   { label: "My Bookings", href: "/my-bookings" },
-  { label: "My Added Cars", href: "/my-cars" },
 ];
 
 const Logo = ({ className = "" }) => {
@@ -49,8 +50,8 @@ const ProfileDropdown = ({ session }) => {
         <span className="flex size-10 items-center justify-center rounded-full bg-primary text-primary-content overflow-hidden cursor-pointer">
           {session?.user?.image ? (
             <Image
-            width={40}
-            height={40}
+              width={40}
+              height={40}
               src={session.user.image}
               alt={session.user.name || "User"}
               className="size-10 rounded-full object-cover"
@@ -90,7 +91,9 @@ const ProfileDropdown = ({ session }) => {
 const Navbar = () => {
   const { data: session, isPending } = authClient.useSession();
   const isLoggedIn = Boolean(session?.user);
-  console.log(session);
+  const visibleNavLinks = isLoggedIn
+    ? navLinks
+    : navLinks.filter((link) => !link.authRequired);
 
   return (
     <motion.nav
@@ -115,7 +118,7 @@ const Navbar = () => {
             tabIndex={0}
             className="menu dropdown-content menu-sm z-50 mt-3 w-56 rounded-box border border-base-300 bg-base-100 p-2 shadow"
           >
-            {navLinks.map((link) => (
+            {visibleNavLinks.map((link) => (
               <motion.li
                 key={link.href}
                 whileHover={{ x: 4 }}
@@ -127,7 +130,7 @@ const Navbar = () => {
           </ul>
         </div>
 
-        <Logo className="hidden lg:block lg:" />
+        <Logo className="hidden lg:block" />
       </div>
 
       <div className="navbar-center">
@@ -135,7 +138,7 @@ const Navbar = () => {
 
         <div className="hidden lg:flex">
           <ul className="menu menu-horizontal gap-1 px-1">
-            {navLinks.map((link) => (
+            {visibleNavLinks.map((link) => (
               <motion.li
                 key={link.href}
                 whileHover={{ y: -2 }}
