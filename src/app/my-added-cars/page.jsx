@@ -1,11 +1,13 @@
 "use client";
 
 import { authClient } from "@/lib/auth-client";
+import UpdateCarModal from "../components/UpdateCarModal";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import {
   FiAlertTriangle,
+  FiEdit3,
   FiMapPin,
   FiPlus,
   FiRefreshCw,
@@ -22,21 +24,19 @@ const formatPrice = (price) => {
 const MyAddedCarPage = () => {
   const { data: session, isPending } = authClient.useSession();
   const userId = session?.user?.id;
+
   const [cars, setCars] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
   const [selectedCar, setSelectedCar] = useState(null);
+  const [editingCar, setEditingCar] = useState(null);
 
   useEffect(() => {
-    if (isPending) {
-      return;
-    }
+    if (isPending) return;
 
     if (!userId) {
       return;
     }
-
-    const controller = new AbortController();
 
     const loadCars = async () => {
       try {
@@ -44,35 +44,25 @@ const MyAddedCarPage = () => {
         setErrorMessage("");
 
         const response = await fetch(
-          `http://localhost:5001/car-listing/${encodeURIComponent(userId)}`,
-          {
-            method: "GET",
-            signal: controller.signal,
-          },
+          `http://localhost:5001/car-listing/${userId}`,
         );
 
         if (!response.ok) {
           throw new Error("Failed to load your car listings");
         }
 
-        const carsData = await response.json();
-        setCars(carsData);
+        const data = await response.json();
+        setCars(data);
       } catch (error) {
-        if (error.name !== "AbortError") {
-          console.error("my added cars load error:", error);
-          setErrorMessage(error.message || "Failed to load your car listings");
-        }
+        console.error("my added cars load error:", error);
+        setErrorMessage(error.message || "Failed to load your car listings");
       } finally {
         setIsLoading(false);
       }
     };
 
     loadCars();
-
-    return () => controller.abort();
   }, [isPending, userId]);
-
-  const isPageLoading = isPending || isLoading;
 
   return (
     <section className="min-h-[calc(100vh-65px)] bg-base-100 px-4 py-10 text-base-content sm:px-6 lg:px-8">
@@ -103,7 +93,7 @@ const MyAddedCarPage = () => {
               Login
             </Link>
           </div>
-        ) : isPageLoading ? (
+        ) : isPending || isLoading ? (
           <div className="flex min-h-72 items-center justify-center rounded-lg border border-base-300 bg-base-200">
             <span className="loading loading-spinner loading-lg text-primary" />
           </div>
@@ -127,79 +117,87 @@ const MyAddedCarPage = () => {
           </div>
         ) : (
           <div className="space-y-4">
-            {cars.map((car) => {
-              return (
-                <article
-                  key={car._id}
-                  className="grid gap-4 rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm md:grid-cols-[220px_minmax(0,1fr)_auto] md:items-center"
-                >
-                  <div className="relative aspect-16/10 overflow-hidden rounded-md bg-base-300">
-                    <Image
-                      src={car.imageUrl}
-                      alt={car.carName}
-                      fill
-                      sizes="(min-width: 768px) 220px, 100vw"
-                      className="object-cover"
-                    />
+            {cars.map((car) => (
+              <article
+                key={car._id}
+                className="grid gap-4 rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm md:grid-cols-[220px_minmax(0,1fr)_auto] md:items-center"
+              >
+                <div className="relative aspect-16/10 overflow-hidden rounded-md bg-base-300">
+                  <Image
+                    src={car.imageUrl}
+                    alt={car.carName}
+                    fill
+                    sizes="(min-width: 768px) 220px, 100vw"
+                    className="object-cover"
+                  />
+                </div>
+
+                <div className="min-w-0 space-y-3">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="badge badge-primary badge-sm">
+                      {car.availabilityStatus}
+                    </span>
+                    <span className="badge badge-outline badge-sm">
+                      {car.carType}
+                    </span>
                   </div>
 
-                  <div className="min-w-0 space-y-3">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="badge badge-primary badge-sm">
-                        {car.availabilityStatus}
-                      </span>
-                      <span className="badge badge-outline badge-sm">
-                        {car.carType}
-                      </span>
-                    </div>
-
-                    <div>
-                      <h2 className="truncate text-lg font-semibold">
-                        {car.carName}
-                      </h2>
-                      <p className="mt-1 line-clamp-2 text-sm text-base-content/65">
-                        {car.description}
-                      </p>
-                    </div>
-
-                    <div className="grid gap-2 text-sm text-base-content/75 sm:grid-cols-3">
-                      <p className="flex items-center gap-2">
-                        <FiTag className="shrink-0 text-primary" size={16} />
-                        <span>{formatPrice(car.dailyRentPrice)} / day</span>
-                      </p>
-                      <p className="flex items-center gap-2">
-                        <FiUsers className="shrink-0 text-primary" size={16} />
-                        <span>{car.seatCapacity} seats</span>
-                      </p>
-                      <p className="flex min-w-0 items-center gap-2">
-                        <FiMapPin
-                          className="shrink-0 text-primary"
-                          size={16}
-                        />
-                        <span className="truncate">
-                          {car.pickupLocation}
-                        </span>
-                      </p>
-                    </div>
+                  <div>
+                    <h2 className="truncate text-lg font-semibold">
+                      {car.carName}
+                    </h2>
+                    <p className="mt-1 line-clamp-2 text-sm text-base-content/65">
+                      {car.description}
+                    </p>
                   </div>
 
-                  <div className="flex justify-end md:self-end">
-                    <button
-                      type="button"
-                      className="btn btn-outline btn-error btn-sm"
-                      onClick={() => setSelectedCar(car)}
-                    >
-                      <FiTrash2 size={15} />
-                      Delete
-                    </button>
+                  <div className="grid gap-2 text-sm text-base-content/75 sm:grid-cols-3">
+                    <p className="flex items-center gap-2">
+                      <FiTag className="shrink-0 text-primary" size={16} />
+                      <span>{formatPrice(car.dailyRentPrice)} / day</span>
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <FiUsers className="shrink-0 text-primary" size={16} />
+                      <span>{car.seatCapacity} seats</span>
+                    </p>
+                    <p className="flex min-w-0 items-center gap-2">
+                      <FiMapPin className="shrink-0 text-primary" size={16} />
+                      <span className="truncate">{car.pickupLocation}</span>
+                    </p>
                   </div>
-                </article>
-              );
-            })}
+                </div>
+
+                <div className="flex flex-wrap justify-end gap-2 md:self-end">
+                  <button
+                    type="button"
+                    className="btn btn-outline btn-sm"
+                    onClick={() => setEditingCar(car)}
+                  >
+                    <FiEdit3 size={15} />
+                    Update
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-outline btn-error btn-sm"
+                    onClick={() => setSelectedCar(car)}
+                  >
+                    <FiTrash2 size={15} />
+                    Delete
+                  </button>
+                </div>
+              </article>
+            ))}
           </div>
         )}
 
-        {selectedCar ? (
+        {editingCar && (
+          <UpdateCarModal
+            car={editingCar}
+            onClose={() => setEditingCar(null)}
+          />
+        )}
+
+        {selectedCar && (
           <div className="modal modal-open">
             <div className="modal-box max-w-md rounded-lg">
               <div className="flex items-start gap-3">
@@ -213,8 +211,7 @@ const MyAddedCarPage = () => {
                     <span className="font-medium text-base-content">
                       {selectedCar.carName}
                     </span>{" "}
-                    from your listings. This action will be connected to the
-                    database later.
+                    from your listings.
                   </p>
                 </div>
               </div>
@@ -237,6 +234,7 @@ const MyAddedCarPage = () => {
                 </button>
               </div>
             </div>
+
             <button
               type="button"
               className="modal-backdrop"
@@ -244,7 +242,7 @@ const MyAddedCarPage = () => {
               onClick={() => setSelectedCar(null)}
             />
           </div>
-        ) : null}
+        )}
       </div>
     </section>
   );

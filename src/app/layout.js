@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Project Initialized",
-  description: "Next.js starter cleaned and theme system prepared.",
+  title: "Rentivo | Car Rental Platform",
+  description: "Explore, book, and manage rental cars with Rentivo.",
 };
 
 export default function RootLayout({ children }) {
@@ -28,9 +29,8 @@ export default function RootLayout({ children }) {
         <header>
           <Navbar></Navbar>
         </header>
-        <main>
-          {children}
-        </main>
+        <main>{children}</main>
+        <Footer />
       </body>
     </html>
   );

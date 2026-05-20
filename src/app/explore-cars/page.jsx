@@ -1,11 +1,8 @@
-import React from 'react';
+import ExploreCarsClient from "@/app/components/ExploreCarsClient";
+import { carTypes, demoCars } from "@/lib/demo-cars";
 
 const ExploreCars = () => {
-    return (
-        <div>
-            <h2>This is explore car page</h2>
-        </div>
-    );
+  return <ExploreCarsClient cars={demoCars} carTypes={carTypes} />;
 };
 
 export default ExploreCars;
