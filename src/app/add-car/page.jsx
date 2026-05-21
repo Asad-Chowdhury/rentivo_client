@@ -1,6 +1,6 @@
 "use client";
 
-import { authClient } from "@/lib/auth-client";
+import { authClient, getAuthHeaders } from "@/lib/auth-client";
 import { toast } from "@contentstack/react-toastify";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -51,11 +51,13 @@ const AddCar = () => {
 
     try {
       setIsSubmitting(true);
+      const authHeaders = await getAuthHeaders();
 
       const response = await fetch("http://localhost:5001/add-new-car", {
         method: "POST",
         headers: {
           "content-type": "application/json",
+          ...authHeaders,
         },
         body: JSON.stringify(carData),
       });

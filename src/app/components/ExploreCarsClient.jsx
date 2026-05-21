@@ -1,5 +1,6 @@
 "use client";
 
+import { getAuthHeaders } from "@/lib/auth-client";
 import { useEffect, useMemo, useState } from "react";
 import { FiFilter, FiSearch } from "react-icons/fi";
 import CarCard from "./CarCard";
@@ -16,8 +17,11 @@ const ExploreCarsClient = () => {
       try {
         setIsLoading(true);
         setErrorMessage("");
+        const authHeaders = await getAuthHeaders();
 
-        const response = await fetch("http://localhost:5001/car-listing");
+        const response = await fetch("http://localhost:5001/car-listing", {
+          headers: authHeaders,
+        });
 
         if (!response.ok) {
           throw new Error("Failed to load cars");

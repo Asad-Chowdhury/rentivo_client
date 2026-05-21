@@ -1,6 +1,6 @@
 "use client";
 
-import { authClient } from "@/lib/auth-client";
+import { authClient, getAuthHeaders } from "@/lib/auth-client";
 import UpdateCarModal from "../components/UpdateCarModal";
 import { toast } from "@contentstack/react-toastify";
 import Image from "next/image";
@@ -58,9 +58,13 @@ const MyAddedCarPage = () => {
       try {
         setIsLoading(true);
         setErrorMessage("");
+        const authHeaders = await getAuthHeaders();
 
         const response = await fetch(
           `http://localhost:5001/car-listing/${userId}`,
+          {
+            headers: authHeaders,
+          },
         );
 
         if (!response.ok) {
@@ -85,11 +89,13 @@ const MyAddedCarPage = () => {
 
     try {
       setIsDeleting(true);
+      const authHeaders = await getAuthHeaders();
 
       const response = await fetch(
         `http://localhost:5001/car-listing/${carId}`,
         {
           method: "DELETE",
+          headers: authHeaders,
         },
       );
 

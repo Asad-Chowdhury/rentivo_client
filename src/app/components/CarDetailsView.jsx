@@ -1,6 +1,6 @@
 "use client";
 
-import { authClient } from "@/lib/auth-client";
+import { authClient, getAuthHeaders } from "@/lib/auth-client";
 import { toast } from "@contentstack/react-toastify";
 import Image from "next/image";
 import Link from "next/link";
@@ -55,9 +55,13 @@ const CarDetailsView = ({ carId }) => {
       try {
         setIsLoading(true);
         setErrorMessage("");
+        const authHeaders = await getAuthHeaders();
 
         const response = await fetch(
           `http://localhost:5001/car-listing/details/${carId}`,
+          {
+            headers: authHeaders,
+          },
         );
 
         const data = await response.json();
@@ -133,11 +137,13 @@ const CarDetailsView = ({ carId }) => {
 
     try {
       setIsBookingSubmitting(true);
+      const authHeaders = await getAuthHeaders();
 
       const response = await fetch(`http://localhost:5001/booking/${user.id}`, {
         method: "POST",
         headers: {
           "content-type": "application/json",
+          ...authHeaders,
         },
         body: JSON.stringify(bookingDetails),
       });

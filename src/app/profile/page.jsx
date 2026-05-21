@@ -1,6 +1,6 @@
 "use client";
 
-import { authClient } from "@/lib/auth-client";
+import { authClient, getAuthHeaders } from "@/lib/auth-client";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -93,9 +93,14 @@ const ProfilePage = () => {
     if (!user?.id) return;
 
     const loadProfileStats = async () => {
+      const authHeaders = await getAuthHeaders();
       const [carsResult, bookingsResult] = await Promise.allSettled([
-        fetch(`http://localhost:5001/car-listing/${user.id}`),
-        fetch(`http://localhost:5001/booking/${user.id}`),
+        fetch(`http://localhost:5001/car-listing/${user.id}`, {
+          headers: authHeaders,
+        }),
+        fetch(`http://localhost:5001/booking/${user.id}`, {
+          headers: authHeaders,
+        }),
       ]);
 
       if (carsResult.status === "fulfilled" && carsResult.value.ok) {

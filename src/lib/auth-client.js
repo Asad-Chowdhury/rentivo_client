@@ -6,3 +6,19 @@ export const authClient = createAuthClient({
   //add the following code and ensure jwtClient import
   plugins: [jwtClient()],
 });
+
+export const getAuthHeaders = async () => {
+  try {
+    const { data: tokenData } = await authClient.token();
+
+    if (!tokenData?.token) {
+      return {};
+    }
+
+    return {
+      authorization: `Bearer ${tokenData.token}`,
+    };
+  } catch {
+    return {};
+  }
+};

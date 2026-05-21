@@ -1,5 +1,6 @@
 "use client";
 
+import { getAuthHeaders } from "@/lib/auth-client";
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import CarCard from "./CarCard";
@@ -25,8 +26,11 @@ const HomeAvailableCars = () => {
       try {
         setIsLoading(true);
         setErrorMessage("");
+        const authHeaders = await getAuthHeaders();
 
-        const response = await fetch("http://localhost:5001/car-listing");
+        const response = await fetch("http://localhost:5001/car-listing", {
+          headers: authHeaders,
+        });
 
         if (!response.ok) {
           throw new Error("Failed to load available cars");

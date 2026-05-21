@@ -1,7 +1,7 @@
 "use client";
 
 import BookingCard from "@/app/components/BookingCard";
-import { authClient } from "@/lib/auth-client";
+import { authClient, getAuthHeaders } from "@/lib/auth-client";
 import { toast } from "@contentstack/react-toastify";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -32,8 +32,11 @@ const MyBookingPage = () => {
       try {
         setIsLoading(true);
         setErrorMessage("");
+        const authHeaders = await getAuthHeaders();
 
-        const response = await fetch(`http://localhost:5001/booking/${userId}`);
+        const response = await fetch(`http://localhost:5001/booking/${userId}`, {
+          headers: authHeaders,
+        });
         const data = await response.json();
 
         if (!response.ok) {
@@ -58,11 +61,13 @@ const MyBookingPage = () => {
 
     try {
       setActionId(`cancel-${bookingId}`);
+      const authHeaders = await getAuthHeaders();
 
       const response = await fetch(`http://localhost:5001/booking/${userId}`, {
         method: "DELETE",
         headers: {
           "content-type": "application/json",
+          ...authHeaders,
         },
         body: JSON.stringify({ _id: bookingId }),
       });
@@ -95,11 +100,13 @@ const MyBookingPage = () => {
 
     try {
       setActionId(`confirm-${bookingId}`);
+      const authHeaders = await getAuthHeaders();
 
       const response = await fetch(`http://localhost:5001/booking/${userId}`, {
         method: "PATCH",
         headers: {
           "content-type": "application/json",
+          ...authHeaders,
         },
         body: JSON.stringify({ _id: bookingId, status: "Confirmed" }),
       });

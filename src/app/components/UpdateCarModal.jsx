@@ -1,5 +1,6 @@
 "use client";
 
+import { getAuthHeaders } from "@/lib/auth-client";
 import { toast } from "@contentstack/react-toastify";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -45,6 +46,7 @@ const UpdateCarModal = ({ car, onClose, onUpdated }) => {
 
     try {
       setIsUpdating(true);
+      const authHeaders = await getAuthHeaders();
 
       const response = await fetch(
         `http://localhost:5001/car-listing/${carId}`,
@@ -52,6 +54,7 @@ const UpdateCarModal = ({ car, onClose, onUpdated }) => {
           method: "PATCH",
           headers: {
             "content-type": "application/json",
+            ...authHeaders,
           },
           body: JSON.stringify(updatedCarData),
         },
