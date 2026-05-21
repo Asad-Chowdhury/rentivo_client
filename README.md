@@ -3,7 +3,7 @@
 **Rentivo** is a full-stack car rental platform where users can explore rental cars, view detailed listings, book vehicles, manage their bookings, and maintain their own car listings through a secure authenticated dashboard.
 
 **Live Site (Client):** 
-https://rentivo-client-main.vercel.app/  
+https://rentivo-client.vercel.app/  
 **Client Repository:** Rentivo Client  
 **Backend API:** Express/MongoDB server running with secured car listing and booking endpoints
 
