@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "@contentstack/react-toastify";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import {
@@ -30,7 +31,7 @@ const UpdateCarModal = ({ car, onClose, onUpdated }) => {
     const carId = car?._id;
 
     if (!carId) {
-      alert("Car id is missing. Cannot update this listing.");
+      toast.error("❌ Car id is missing. Cannot update this listing.");
       return;
     }
 
@@ -64,7 +65,7 @@ const UpdateCarModal = ({ car, onClose, onUpdated }) => {
 
       if (data.matchedCount > 0) {
         onUpdated(carId, updatedCarData);
-        alert("Car Listing updated");
+        toast.success("✅ Your listing is updated!");
         onClose();
         router.refresh();
         return;
@@ -75,7 +76,7 @@ const UpdateCarModal = ({ car, onClose, onUpdated }) => {
       );
     } catch (error) {
       console.error("update car error:", error);
-      alert(error.message || "Failed to update car listing");
+      toast.error(`❌ ${error.message || "Failed to update car listing"}`);
     } finally {
       setIsUpdating(false);
     }

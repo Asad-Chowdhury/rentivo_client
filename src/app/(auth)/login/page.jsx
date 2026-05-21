@@ -1,6 +1,7 @@
 "use client";
 
 import { authClient } from "@/lib/auth-client";
+import { toast } from "@contentstack/react-toastify";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -26,14 +27,14 @@ const Login = () => {
     });
 
     if (data) {
-      alert("SignIn Success");
+      toast.success("👋 Sign in successful!");
       form.reset();
       router.push("/");
     }
 
     if (error) {
       console.error("login error:", error);
-      alert(error.message || "Login failed");
+      toast.error(`❌ ${error.message || "Login failed"}`);
     }
   };
 
@@ -45,7 +46,7 @@ const Login = () => {
 
     if (error) {
       console.error("google sign-in error:", error);
-      alert(error.message || "Google sign-in failed");
+      toast.error(`❌ ${error.message || "Google sign-in failed"}`);
     }
   };
 

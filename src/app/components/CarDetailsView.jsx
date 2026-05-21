@@ -1,7 +1,10 @@
 "use client";
 
+import { authClient } from "@/lib/auth-client";
+import { toast } from "@contentstack/react-toastify";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import {
   FiCalendar,
@@ -33,8 +36,13 @@ const getInitialReturnDate = () => {
 };
 
 const CarDetailsView = ({ carId }) => {
+  const router = useRouter();
+  const { data: session, isPending: isSessionPending } =
+    authClient.useSession();
+  const user = session?.user;
   const [car, setCar] = useState(null);
   const [isLoading, setIsLoading] = useState(Boolean(carId));
+  const [isBookingSubmitting, setIsBookingSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [pickupDate, setPickupDate] = useState(formatDateInput(new Date()));
@@ -89,6 +97,67 @@ const CarDetailsView = ({ carId }) => {
       total: subtotal + serviceFee + protection,
     };
   }, [car, pickupDate, returnDate]);
+
+  const bookingSubmitHandler = async (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+
+    if (!user?.id) {
+      toast.info("🔐 Please login before booking this car.");
+      router.push("/login");
+      return;
+    }
+
+    const formData = new FormData(event.currentTarget);
+    const formValues = Object.fromEntries(formData.entries());
+    const bookingDetails = {
+      bookingDate: new Date().toISOString(),
+      perDayPrice: pricing.dailyPrice,
+      pickupDate,
+      returnDate,
+      duration: pricing.duration,
+      subtotal: pricing.subtotal,
+      platformFee: pricing.serviceFee,
+      protectionFee: pricing.protection,
+      totalPrice: pricing.total,
+      driverNeeded: formValues.driverNeeded,
+      specialNote: formValues.specialNote,
+      userId: user.id,
+      username: user.name || "",
+      email: user.email || "",
+      carId,
+      carName: car.carName,
+      carType: car.carType,
+      carImage: car.imageUrl,
+    };
+
+    try {
+      setIsBookingSubmitting(true);
+
+      const response = await fetch(`http://localhost:5001/booking/${user.id}`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(bookingDetails),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to save booking");
+      }
+
+      toast.success("🚗 Booking saved successfully!");
+      setIsBookingOpen(false);
+      form.reset();
+    } catch (error) {
+      console.error("booking error:", error);
+      toast.error(`❌ ${error.message || "Failed to save booking"}`);
+    } finally {
+      setIsBookingSubmitting(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -386,17 +455,37 @@ const CarDetailsView = ({ carId }) => {
               Complete these booking details when backend booking functionality
               is connected.
             </p>
-            <form className="mt-5 space-y-4">
+            <form className="mt-5 space-y-4" onSubmit={bookingSubmitHandler}>
+              <div className="rounded-lg border border-base-300 bg-base-200 p-4 text-sm">
+                <div className="flex justify-between">
+                  <span>Pick-up</span>
+                  <span className="font-medium">{pickupDate}</span>
+                </div>
+                <div className="mt-2 flex justify-between">
+                  <span>Return</span>
+                  <span className="font-medium">{returnDate}</span>
+                </div>
+                <div className="mt-2 flex justify-between">
+                  <span>Total</span>
+                  <span className="font-semibold">
+                    {formatPrice(pricing.total)}
+                  </span>
+                </div>
+              </div>
               <label className="block space-y-2">
                 <span className="text-sm font-medium">Driver Needed</span>
-                <select className="select select-bordered w-full bg-base-100">
-                  <option>Yes</option>
-                  <option>No</option>
+                <select
+                  name="driverNeeded"
+                  className="select select-bordered w-full bg-base-100"
+                >
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
                 </select>
               </label>
               <label className="block space-y-2">
                 <span className="text-sm font-medium">Special Note</span>
                 <textarea
+                  name="specialNote"
                   rows={4}
                   className="textarea textarea-bordered w-full bg-base-100"
                   placeholder="Pickup timing, child seat, luggage, or any other note"
@@ -411,12 +500,12 @@ const CarDetailsView = ({ carId }) => {
                   Cancel
                 </button>
                 <button
-                  type="button"
+                  type="submit"
                   className="btn btn-primary"
-                  onClick={() => setIsBookingOpen(false)}
+                  disabled={isSessionPending || isBookingSubmitting}
                 >
                   <FiCheckCircle size={18} />
-                  Book Now
+                  {isBookingSubmitting ? "Saving..." : "Book Now"}
                 </button>
               </div>
             </form>

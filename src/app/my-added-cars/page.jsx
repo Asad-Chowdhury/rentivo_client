@@ -2,6 +2,7 @@
 
 import { authClient } from "@/lib/auth-client";
 import UpdateCarModal from "../components/UpdateCarModal";
+import { toast } from "@contentstack/react-toastify";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -115,13 +116,14 @@ const MyAddedCarPage = () => {
           currentCars.filter((car) => getCarId(car) !== carId),
         );
         setSelectedCar(null);
+        toast.success("🗑️ Listing deleted successfully.");
         return;
       }
 
       throw new Error("Car listing was not deleted");
     } catch (error) {
       console.error("delete car error:", error);
-      alert(error.message || "Failed to delete car listing");
+      toast.error(`❌ ${error.message || "Failed to delete car listing"}`);
     } finally {
       setIsDeleting(false);
     }

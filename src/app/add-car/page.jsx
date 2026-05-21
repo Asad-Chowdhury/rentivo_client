@@ -1,6 +1,7 @@
 "use client";
 
 import { authClient } from "@/lib/auth-client";
+import { toast } from "@contentstack/react-toastify";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import {
@@ -33,6 +34,7 @@ const AddCar = () => {
     event.preventDefault();
 
     if (!userId) {
+      toast.info("🔐 Please login before adding a car.");
       router.push("/login");
       return;
     }
@@ -63,10 +65,11 @@ const AddCar = () => {
       }
 
       form.reset();
+      toast.success("🎉 Congratulations! Your car is added to the listing.");
       router.push("/my-added-cars");
     } catch (error) {
       console.error("add car error:", error);
-      alert(error.message || "Failed to save car listing");
+      toast.error(`❌ ${error.message || "Failed to save car listing"}`);
     } finally {
       setIsSubmitting(false);
     }

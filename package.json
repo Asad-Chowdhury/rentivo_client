@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@better-auth/mongo-adapter": "^1.6.11",
+    "@contentstack/react-toastify": "^6.1.5",
     "better-auth": "^1.6.11",
     "framer-motion": "^12.39.0",
     "mongodb": "^7.2.0",
