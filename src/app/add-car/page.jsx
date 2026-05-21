@@ -28,7 +28,6 @@ const AddCar = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   console.log(session);
   const userId = session?.user?.id;
-  
 
   const carFormSubmitHandler = async (event) => {
     event.preventDefault();
@@ -53,14 +52,17 @@ const AddCar = () => {
       setIsSubmitting(true);
       const authHeaders = await getAuthHeaders();
 
-      const response = await fetch("http://localhost:5001/add-new-car", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          ...authHeaders,
+      const response = await fetch(
+        "https://rentivo-server-three.vercel.app/add-new-car",
+        {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            ...authHeaders,
+          },
+          body: JSON.stringify(carData),
         },
-        body: JSON.stringify(carData),
-      });
+      );
 
       if (!response.ok) {
         throw new Error("Failed to save car listing");

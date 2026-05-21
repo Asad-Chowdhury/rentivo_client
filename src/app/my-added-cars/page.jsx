@@ -61,7 +61,7 @@ const MyAddedCarPage = () => {
         const authHeaders = await getAuthHeaders();
 
         const response = await fetch(
-          `http://localhost:5001/car-listing/${userId}`,
+          `https://rentivo-server-three.vercel.app/car-listing/${userId}`,
           {
             headers: authHeaders,
           },
@@ -92,7 +92,7 @@ const MyAddedCarPage = () => {
       const authHeaders = await getAuthHeaders();
 
       const response = await fetch(
-        `http://localhost:5001/car-listing/${carId}`,
+        `https://rentivo-server-three.vercel.app/car-listing/${carId}`,
         {
           method: "DELETE",
           headers: authHeaders,

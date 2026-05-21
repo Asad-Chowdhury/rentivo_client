@@ -49,7 +49,7 @@ const UpdateCarModal = ({ car, onClose, onUpdated }) => {
       const authHeaders = await getAuthHeaders();
 
       const response = await fetch(
-        `http://localhost:5001/car-listing/${carId}`,
+        `https://rentivo-server-three.vercel.app/car-listing/${carId}`,
         {
           method: "PATCH",
           headers: {
@@ -239,7 +239,11 @@ const UpdateCarModal = ({ car, onClose, onUpdated }) => {
             >
               Cancel
             </button>
-            <button type="submit" className="btn btn-primary" disabled={isUpdating}>
+            <button
+              type="submit"
+              className="btn btn-primary"
+              disabled={isUpdating}
+            >
               <FiSave size={18} />
               {isUpdating ? "Updating..." : "Update Car Listing"}
             </button>

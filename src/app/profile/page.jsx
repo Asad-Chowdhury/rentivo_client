@@ -95,10 +95,13 @@ const ProfilePage = () => {
     const loadProfileStats = async () => {
       const authHeaders = await getAuthHeaders();
       const [carsResult, bookingsResult] = await Promise.allSettled([
-        fetch(`http://localhost:5001/car-listing/${user.id}`, {
-          headers: authHeaders,
-        }),
-        fetch(`http://localhost:5001/booking/${user.id}`, {
+        fetch(
+          `https://rentivo-server-three.vercel.app/car-listing/${user.id}`,
+          {
+            headers: authHeaders,
+          },
+        ),
+        fetch(`https://rentivo-server-three.vercel.app/booking/${user.id}`, {
           headers: authHeaders,
         }),
       ]);
@@ -343,7 +346,10 @@ const ProfilePage = () => {
             <div className="rounded-lg border border-base-300 bg-base-200 p-5 shadow-sm">
               <div className="mb-4 flex items-center justify-between gap-3">
                 <h2 className="font-bold">Account information</h2>
-                <button type="button" className="btn btn-ghost btn-sm text-primary">
+                <button
+                  type="button"
+                  className="btn btn-ghost btn-sm text-primary"
+                >
                   <FiEdit3 size={15} />
                   Edit
                 </button>
@@ -360,12 +366,17 @@ const ProfilePage = () => {
                 <div className="rounded-lg bg-base-100 p-4">
                   <p className="text-xs text-base-content/60">Email address</p>
                   <p className="mt-2 flex items-center gap-2 break-all font-semibold">
-                    <FiMail className="shrink-0 text-base-content/50" size={15} />
+                    <FiMail
+                      className="shrink-0 text-base-content/50"
+                      size={15}
+                    />
                     {user.email || "No email added"}
                   </p>
                 </div>
                 <div className="rounded-lg bg-base-100 p-4">
-                  <p className="text-xs text-base-content/60">Account created</p>
+                  <p className="text-xs text-base-content/60">
+                    Account created
+                  </p>
                   <p className="mt-2 flex items-center gap-2 font-semibold">
                     <FiCalendar className="text-base-content/50" size={15} />
                     {formatDate(user.createdAt)}

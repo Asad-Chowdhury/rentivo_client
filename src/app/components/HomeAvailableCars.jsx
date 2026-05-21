@@ -28,9 +28,12 @@ const HomeAvailableCars = () => {
         setErrorMessage("");
         const authHeaders = await getAuthHeaders();
 
-        const response = await fetch("http://localhost:5001/car-listing", {
-          headers: authHeaders,
-        });
+        const response = await fetch(
+          "https://rentivo-server-three.vercel.app/car-listing",
+          {
+            headers: authHeaders,
+          },
+        );
 
         if (!response.ok) {
           throw new Error("Failed to load available cars");

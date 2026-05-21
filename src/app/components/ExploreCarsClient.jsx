@@ -43,7 +43,7 @@ const ExploreCarsClient = () => {
 
         const queryString = params.toString();
         const response = await fetch(
-          `http://localhost:5001/car-listing${queryString ? `?${queryString}` : ""}`,
+          `https://rentivo-server-three.vercel.app/car-listing${queryString ? `?${queryString}` : ""}`,
           {
             headers: authHeaders,
           },

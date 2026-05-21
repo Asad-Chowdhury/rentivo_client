@@ -34,9 +34,12 @@ const MyBookingPage = () => {
         setErrorMessage("");
         const authHeaders = await getAuthHeaders();
 
-        const response = await fetch(`http://localhost:5001/booking/${userId}`, {
-          headers: authHeaders,
-        });
+        const response = await fetch(
+          `https://rentivo-server-three.vercel.app/booking/${userId}`,
+          {
+            headers: authHeaders,
+          },
+        );
         const data = await response.json();
 
         if (!response.ok) {
@@ -63,14 +66,17 @@ const MyBookingPage = () => {
       setActionId(`cancel-${bookingId}`);
       const authHeaders = await getAuthHeaders();
 
-      const response = await fetch(`http://localhost:5001/booking/${userId}`, {
-        method: "DELETE",
-        headers: {
-          "content-type": "application/json",
-          ...authHeaders,
+      const response = await fetch(
+        `https://rentivo-server-three.vercel.app/booking/${userId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "content-type": "application/json",
+            ...authHeaders,
+          },
+          body: JSON.stringify({ _id: bookingId }),
         },
-        body: JSON.stringify({ _id: bookingId }),
-      });
+      );
       const data = await response.json();
 
       if (!response.ok) {
@@ -102,21 +108,28 @@ const MyBookingPage = () => {
       setActionId(`confirm-${bookingId}`);
       const authHeaders = await getAuthHeaders();
 
-      const response = await fetch(`http://localhost:5001/booking/${userId}`, {
-        method: "PATCH",
-        headers: {
-          "content-type": "application/json",
-          ...authHeaders,
+      const response = await fetch(
+        `https://rentivo-server-three.vercel.app/booking/${userId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "content-type": "application/json",
+            ...authHeaders,
+          },
+          body: JSON.stringify({ _id: bookingId, status: "Confirmed" }),
         },
-        body: JSON.stringify({ _id: bookingId, status: "Confirmed" }),
-      });
+      );
       const data = await response.json();
 
       if (!response.ok) {
         throw new Error(data.message || "Failed to confirm booking");
       }
 
-      if (data.modifiedCount > 0 || data.matchedCount > 0 || data.acknowledged) {
+      if (
+        data.modifiedCount > 0 ||
+        data.matchedCount > 0 ||
+        data.acknowledged
+      ) {
         setBookings((currentBookings) =>
           currentBookings.map((item) =>
             getBookingId(item) === bookingId

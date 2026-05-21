@@ -144,7 +144,7 @@ http://localhost:3000
 The backend API should be running locally at:
 
 ```text
-http://localhost:5001
+https://rentivo-server-three.vercel.app
 ```
 
 ## Available Scripts

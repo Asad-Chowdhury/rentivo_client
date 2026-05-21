@@ -58,7 +58,7 @@ const CarDetailsView = ({ carId }) => {
         const authHeaders = await getAuthHeaders();
 
         const response = await fetch(
-          `http://localhost:5001/car-listing/details/${carId}`,
+          `https://rentivo-server-three.vercel.app/car-listing/details/${carId}`,
           {
             headers: authHeaders,
           },
@@ -87,7 +87,10 @@ const CarDetailsView = ({ carId }) => {
     const pickupTime = new Date(`${pickupDate}T00:00:00`).getTime();
     const returnTime = new Date(`${returnDate}T00:00:00`).getTime();
     const dayLength = 1000 * 60 * 60 * 24;
-    const duration = Math.max(1, Math.ceil((returnTime - pickupTime) / dayLength));
+    const duration = Math.max(
+      1,
+      Math.ceil((returnTime - pickupTime) / dayLength),
+    );
     const subtotal = dailyPrice * duration;
     const serviceFee = Math.round(subtotal * 0.08);
     const protection = Math.max(9, Math.round(dailyPrice * 0.12 * duration));
@@ -139,14 +142,17 @@ const CarDetailsView = ({ carId }) => {
       setIsBookingSubmitting(true);
       const authHeaders = await getAuthHeaders();
 
-      const response = await fetch(`http://localhost:5001/booking/${user.id}`, {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          ...authHeaders,
+      const response = await fetch(
+        `https://rentivo-server-three.vercel.app/booking/${user.id}`,
+        {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            ...authHeaders,
+          },
+          body: JSON.stringify(bookingDetails),
         },
-        body: JSON.stringify(bookingDetails),
-      });
+      );
 
       const data = await response.json();
 
