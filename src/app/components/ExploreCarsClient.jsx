@@ -1,9 +1,22 @@
 "use client";
 
 import { getAuthHeaders } from "@/lib/auth-client";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { FiFilter, FiSearch } from "react-icons/fi";
 import CarCard from "./CarCard";
+
+const carTypes = [
+  "All",
+  "SUV",
+  "Sedan",
+  "Hatchback",
+  "Luxury",
+  "Convertible",
+  "Van",
+  "Sports",
+  "Electric",
+  "Luxury SUV",
+];
 
 const ExploreCarsClient = () => {
   const [cars, setCars] = useState([]);
@@ -18,10 +31,23 @@ const ExploreCarsClient = () => {
         setIsLoading(true);
         setErrorMessage("");
         const authHeaders = await getAuthHeaders();
+        const params = new URLSearchParams();
 
-        const response = await fetch("http://localhost:5001/car-listing", {
-          headers: authHeaders,
-        });
+        if (searchTerm.trim()) {
+          params.set("search", searchTerm.trim());
+        }
+
+        if (selectedType !== "All") {
+          params.set("type", selectedType);
+        }
+
+        const queryString = params.toString();
+        const response = await fetch(
+          `http://localhost:5001/car-listing${queryString ? `?${queryString}` : ""}`,
+          {
+            headers: authHeaders,
+          },
+        );
 
         if (!response.ok) {
           throw new Error("Failed to load cars");
@@ -38,26 +64,7 @@ const ExploreCarsClient = () => {
     };
 
     loadCars();
-  }, []);
-
-  const carTypes = useMemo(() => {
-    const uniqueTypes = cars
-      .map((car) => car.carType)
-      .filter(Boolean);
-
-    return ["All", ...new Set(uniqueTypes)];
-  }, [cars]);
-
-  const filteredCars = useMemo(() => {
-    return cars.filter((car) => {
-      const matchesSearch = (car.carName || "")
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
-      const matchesType = selectedType === "All" || car.carType === selectedType;
-
-      return matchesSearch && matchesType;
-    });
-  }, [cars, searchTerm, selectedType]);
+  }, [searchTerm, selectedType]);
 
   return (
     <section className="min-h-[calc(100vh-65px)] bg-base-100 px-4 py-10 text-base-content sm:px-6 lg:px-8">
@@ -113,13 +120,13 @@ const ExploreCarsClient = () => {
           </div>
         ) : (
           <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-            {filteredCars.map((car) => (
+            {cars.map((car) => (
               <CarCard key={car._id || car.id} car={car} showDescription />
             ))}
           </div>
         )}
 
-        {!isLoading && !errorMessage && filteredCars.length === 0 ? (
+        {!isLoading && !errorMessage && cars.length === 0 ? (
           <div className="mt-8 rounded-lg border border-base-300 bg-base-200 p-8 text-center">
             <h2 className="text-xl font-semibold">No cars found</h2>
             <p className="mt-2 text-sm text-base-content/70">

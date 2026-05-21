@@ -20,7 +20,7 @@
 
 - `/` - Home page with banner, available cars, and supporting sections.
 - `/explore-cars` - Public car catalog with search and category filtering.
-- `/cars/[id]` - Protected car details page with booking controls.
+- `/cars/[id]` - Public car details page with booking controls.
 - `/add-car` - Protected form to create a new car listing.
 - `/my-added-cars` - Protected owner dashboard for listed cars, update modal, and delete confirmation.
 - `/my-bookings` - Protected booking management page with confirm and cancel actions.
@@ -95,7 +95,6 @@ export const config = {
     "/my-added-cars/:path*",
     "/my-bookings/:path*",
     "/profile/:path*",
-    "/cars/:path*",
   ],
 };
 ```
@@ -104,6 +103,7 @@ Public routes include:
 
 - Home
 - Explore Cars
+- Car Details
 - Login
 - Register
 
@@ -176,6 +176,8 @@ Protected API calls include a JWT authorization header from Better Auth:
 ```js
 authorization: `Bearer ${tokenData.token}`;
 ```
+
+The Explore Cars search and filter use backend query parameters. The server applies MongoDB `$regex` for car-name search and `$in` for car-type filtering.
 
 ## UI and UX Notes
 
