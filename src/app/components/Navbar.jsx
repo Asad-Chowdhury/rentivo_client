@@ -17,6 +17,7 @@ const navLinks = [
 ];
 
 const profileLinks = [
+  { label: "Profile", href: "/profile" },
   { label: "Add Car", href: "/add-car" },
   { label: "My Added Cars", href: "/my-added-cars" },
   { label: "My Bookings", href: "/my-bookings" },
