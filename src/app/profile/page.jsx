@@ -254,9 +254,9 @@ const ProfilePage = () => {
   return (
     <section className="min-h-[calc(100vh-65px)] bg-base-100 text-base-content">
       <div className="relative overflow-hidden border-b border-base-300 bg-primary/10">
-        <div className="absolute left-8 top-[-34px] size-28 rounded-full bg-primary/15" />
+        <div className="absolute left-8 top--34px size-28 rounded-full bg-primary/15" />
         <div className="absolute left-[20%] top-14 size-36 rounded-full bg-primary/15" />
-        <div className="absolute right-[32%] top-[-36px] size-44 rounded-full bg-primary/15" />
+        <div className="absolute right-[32%] top--36px size-44 rounded-full bg-primary/15" />
         <div className="absolute right-10 top-4 size-48 rounded-full bg-primary/15" />
         <div className="relative mx-auto h-32 max-w-7xl sm:h-40" />
       </div>
