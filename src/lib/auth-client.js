@@ -5,7 +5,7 @@ export const authClient = createAuthClient({
   plugins: [jwtClient()],
 });
 
-export const getAuthHeaders = async () => {
+export async function getAuthHeaders() {
   const { data, error } = await authClient.token();
 
   if (error || !data?.token) {
@@ -15,4 +15,4 @@ export const getAuthHeaders = async () => {
   return {
     authorization: `Bearer ${data.token}`,
   };
-};
+}
