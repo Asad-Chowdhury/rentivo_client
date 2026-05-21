@@ -40,7 +40,7 @@ const Register = () => {
     if (data) {
       toast.success("🎉 Account created successfully!");
       form.reset();
-      router.push("/");
+      router.push("/login");
     }
 
     if (error) {
