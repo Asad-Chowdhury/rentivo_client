@@ -252,18 +252,18 @@ const ProfilePage = () => {
   }
 
   return (
-    <section className="min-h-[calc(100vh-65px)] bg-base-100 text-base-content">
+    <section className="min-h-[calc(100vh-65px)] overflow-x-hidden bg-base-100 text-base-content">
       <div className="relative overflow-hidden border-b border-base-300 bg-primary/10">
-        <div className="absolute left-8 top--34px size-28 rounded-full bg-primary/15" />
+        <div className="absolute -top-8 left-8 size-28 rounded-full bg-primary/15" />
         <div className="absolute left-[20%] top-14 size-36 rounded-full bg-primary/15" />
-        <div className="absolute right-[32%] top--36px size-44 rounded-full bg-primary/15" />
+        <div className="absolute -top-9 right-[32%] size-44 rounded-full bg-primary/15" />
         <div className="absolute right-10 top-4 size-48 rounded-full bg-primary/15" />
         <div className="relative mx-auto h-32 max-w-7xl sm:h-40" />
       </div>
 
-      <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-3 pb-10 sm:px-6 sm:pb-12 lg:px-8">
         <div className="-mt-12 flex flex-col gap-5 sm:-mt-14 lg:flex-row lg:items-end lg:justify-between">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
+          <div className="flex min-w-0 flex-col items-center gap-4 text-center sm:flex-row sm:items-end sm:text-left">
             <div className="relative flex size-28 shrink-0 items-center justify-center overflow-hidden rounded-full border-4 border-base-100 bg-base-200 text-3xl font-bold text-primary shadow-sm ring-1 ring-base-300 sm:size-32">
               {user.image ? (
                 <Image
@@ -282,15 +282,15 @@ const ProfilePage = () => {
               </span>
             </div>
 
-            <div className="pb-1">
-              <h1 className="text-2xl font-bold tracking-normal sm:text-3xl">
+            <div className="min-w-0 pb-1">
+              <h1 className="break-words text-2xl font-bold tracking-normal sm:text-3xl">
                 {user.name || "Rentivo User"}
               </h1>
-              <p className="mt-1 flex items-center gap-2 text-sm text-base-content/70">
-                <FiMail size={15} />
+              <p className="mt-1 flex min-w-0 items-center justify-center gap-2 break-all text-sm text-base-content/70 sm:justify-start">
+                <FiMail className="shrink-0" size={15} />
                 {user.email || "No email added"}
               </p>
-              <div className="mt-3 flex flex-wrap gap-2">
+              <div className="mt-3 flex flex-wrap justify-center gap-2 sm:justify-start">
                 <span className="badge border-primary/20 bg-primary/10 text-primary">
                   <FiShield size={13} />
                   {user.emailVerified ? "Verified member" : "Member"}
@@ -302,14 +302,14 @@ const ProfilePage = () => {
             </div>
           </div>
 
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <button type="button" className="btn btn-outline">
+          <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+            <button type="button" className="btn btn-outline w-full sm:w-auto">
               <FiEdit3 size={17} />
               Edit profile
             </button>
             <button
               type="button"
-              className="btn btn-outline"
+              className="btn btn-outline w-full sm:w-auto"
               onClick={signOutHandler}
             >
               <FiLogOut size={17} />
@@ -318,33 +318,33 @@ const ProfilePage = () => {
           </div>
         </div>
 
-        <div className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-lg border border-base-300 bg-base-200 p-5 shadow-sm">
+        <div className="mt-7 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+          <div className="rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm sm:p-5">
             <FiTruck className="text-primary" size={22} />
-            <p className="mt-5 text-3xl font-bold">{cars.length}</p>
+            <p className="mt-4 break-words text-2xl font-bold sm:mt-5 sm:text-3xl">{cars.length}</p>
             <p className="text-sm text-base-content/70">Cars listed</p>
           </div>
-          <div className="rounded-lg border border-base-300 bg-base-200 p-5 shadow-sm">
+          <div className="rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm sm:p-5">
             <FiCalendar className="text-emerald-500" size={22} />
-            <p className="mt-5 text-3xl font-bold">{bookings.length}</p>
+            <p className="mt-4 break-words text-2xl font-bold sm:mt-5 sm:text-3xl">{bookings.length}</p>
             <p className="text-sm text-base-content/70">Total bookings</p>
           </div>
-          <div className="rounded-lg border border-base-300 bg-base-200 p-5 shadow-sm">
+          <div className="rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm sm:p-5">
             <FiStar className="text-teal-500" size={22} />
-            <p className="mt-5 text-3xl font-bold">4.9</p>
+            <p className="mt-4 break-words text-2xl font-bold sm:mt-5 sm:text-3xl">4.9</p>
             <p className="text-sm text-base-content/70">Avg. rating</p>
           </div>
-          <div className="rounded-lg border border-base-300 bg-base-200 p-5 shadow-sm">
+          <div className="rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm sm:p-5">
             <FiCreditCard className="text-primary" size={22} />
-            <p className="mt-5 text-3xl font-bold">${totalEarned}</p>
+            <p className="mt-4 break-words text-2xl font-bold sm:mt-5 sm:text-3xl">${totalEarned}</p>
             <p className="text-sm text-base-content/70">Total earned</p>
           </div>
         </div>
 
-        <div className="mt-5 grid gap-5 lg:grid-cols-[1.25fr_0.8fr]">
+        <div className="mt-5 grid min-w-0 gap-5 lg:grid-cols-[1.25fr_0.8fr]">
           <div className="space-y-5">
-            <div className="rounded-lg border border-base-300 bg-base-200 p-5 shadow-sm">
-              <div className="mb-4 flex items-center justify-between gap-3">
+            <div className="rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm sm:p-5">
+              <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
                 <h2 className="font-bold">Account information</h2>
                 <button
                   type="button"
@@ -356,16 +356,19 @@ const ProfilePage = () => {
               </div>
 
               <div className="grid gap-3 sm:grid-cols-2">
-                <div className="rounded-lg bg-base-100 p-4">
+                <div className="min-w-0 rounded-lg bg-base-100 p-4">
                   <p className="text-xs text-base-content/60">Full name</p>
-                  <p className="mt-2 flex items-center gap-2 font-semibold">
-                    <FiUser className="text-base-content/50" size={15} />
+                  <p className="mt-2 flex min-w-0 items-center gap-2 break-words font-semibold">
+                    <FiUser
+                      className="shrink-0 text-base-content/50"
+                      size={15}
+                    />
                     {user.name || "Rentivo User"}
                   </p>
                 </div>
-                <div className="rounded-lg bg-base-100 p-4">
+                <div className="min-w-0 rounded-lg bg-base-100 p-4">
                   <p className="text-xs text-base-content/60">Email address</p>
-                  <p className="mt-2 flex items-center gap-2 break-all font-semibold">
+                  <p className="mt-2 flex min-w-0 items-center gap-2 break-all font-semibold">
                     <FiMail
                       className="shrink-0 text-base-content/50"
                       size={15}
@@ -373,23 +376,26 @@ const ProfilePage = () => {
                     {user.email || "No email added"}
                   </p>
                 </div>
-                <div className="rounded-lg bg-base-100 p-4">
+                <div className="min-w-0 rounded-lg bg-base-100 p-4">
                   <p className="text-xs text-base-content/60">
                     Account created
                   </p>
-                  <p className="mt-2 flex items-center gap-2 font-semibold">
-                    <FiCalendar className="text-base-content/50" size={15} />
+                  <p className="mt-2 flex min-w-0 items-center gap-2 break-words font-semibold">
+                    <FiCalendar
+                      className="shrink-0 text-base-content/50"
+                      size={15}
+                    />
                     {formatDate(user.createdAt)}
                   </p>
                 </div>
-                <div className="rounded-lg bg-base-100 p-4">
+                <div className="min-w-0 rounded-lg bg-base-100 p-4">
                   <p className="text-xs text-base-content/60">Email status</p>
                   <span className="badge mt-2 border-primary/20 bg-primary/10 text-primary">
                     <FiCheckCircle size={13} />
                     {user.emailVerified ? "Verified" : "Not verified"}
                   </span>
                 </div>
-                <div className="rounded-lg bg-base-100 p-4 sm:col-span-2">
+                <div className="min-w-0 rounded-lg bg-base-100 p-4 sm:col-span-2">
                   <p className="text-xs text-base-content/60">User ID</p>
                   <p className="mt-2 break-all font-mono text-sm font-semibold">
                     {user.id || "Not available"}
@@ -398,7 +404,7 @@ const ProfilePage = () => {
               </div>
             </div>
 
-            <div className="rounded-lg border border-base-300 bg-base-200 p-5 shadow-sm">
+            <div className="rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm sm:p-5">
               <h2 className="font-bold">Quick actions</h2>
               <div className="mt-4 grid gap-3 sm:grid-cols-3">
                 {quickActions.map((action) => {
@@ -408,14 +414,14 @@ const ProfilePage = () => {
                     <Link
                       key={action.href}
                       href={action.href}
-                      className="group rounded-lg bg-base-100 p-4 transition hover:-translate-y-0.5 hover:shadow-md"
+                      className="group min-w-0 rounded-lg bg-base-100 p-4 transition hover:-translate-y-0.5 hover:shadow-md"
                     >
                       <span
                         className={`flex size-10 items-center justify-center rounded-lg ${action.tone}`}
                       >
                         <Icon size={20} />
                       </span>
-                      <h3 className="mt-8 font-bold leading-tight">
+                      <h3 className="mt-6 break-words font-bold leading-tight sm:mt-8">
                         {action.title}
                       </h3>
                       <p className="mt-1 text-sm leading-5 text-base-content/70">
@@ -430,7 +436,7 @@ const ProfilePage = () => {
               </div>
             </div>
 
-            <div className="rounded-lg border border-base-300 bg-base-200 p-5 shadow-sm">
+            <div className="rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm sm:p-5">
               <h2 className="font-bold">Recent activity</h2>
               <div className="mt-4 divide-y divide-base-300">
                 {recentActivity.map((activity) => {
@@ -440,22 +446,22 @@ const ProfilePage = () => {
                   return (
                     <div
                       key={key}
-                      className="flex items-center justify-between gap-4 py-3 first:pt-0 last:pb-0"
+                      className="flex flex-col items-start justify-between gap-3 py-3 first:pt-0 last:pb-0 sm:flex-row sm:items-center sm:gap-4"
                     >
                       <div className="flex min-w-0 items-center gap-3">
                         <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
                           <Icon size={18} />
                         </span>
                         <div className="min-w-0">
-                          <p className="truncate font-semibold">
+                          <p className="break-words font-semibold sm:truncate">
                             {activity.title}
                           </p>
-                          <p className="truncate text-sm text-base-content/60">
+                          <p className="break-words text-sm text-base-content/60 sm:truncate">
                             {activity.detail}
                           </p>
                         </div>
                       </div>
-                      <span className="badge shrink-0 border-primary/20 bg-primary/10 text-primary">
+                      <span className="badge max-w-full shrink-0 whitespace-normal border-primary/20 bg-primary/10 text-primary">
                         {activity.badge}
                       </span>
                     </div>
@@ -465,8 +471,8 @@ const ProfilePage = () => {
             </div>
           </div>
 
-          <aside className="space-y-5">
-            <div className="rounded-lg border border-base-300 bg-base-200 p-5 shadow-sm">
+          <aside className="min-w-0 space-y-5">
+            <div className="rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm sm:p-5">
               <h2 className="font-bold">Profile completeness</h2>
               <p className="mt-1 text-sm text-base-content/70">
                 Add more info to increase trust with renters.
@@ -484,19 +490,22 @@ const ProfilePage = () => {
                 {completenessItems.map((item) => (
                   <div
                     key={item.label}
-                    className="flex items-center justify-between gap-3"
+                    className="flex items-start justify-between gap-3"
                   >
-                    <span className="flex items-center gap-2 text-base-content/75">
+                    <span className="flex min-w-0 items-start gap-2 text-base-content/75">
                       <FiCheckCircle
-                        className={item.complete ? "text-primary" : ""}
+                        className={`shrink-0 ${item.complete ? "text-primary" : ""}`}
                         size={15}
                       />
                       {item.label}
                     </span>
                     {item.complete ? (
-                      <FiCheckCircle className="text-primary" size={16} />
+                      <FiCheckCircle
+                        className="shrink-0 text-primary"
+                        size={16}
+                      />
                     ) : (
-                      <span className="badge badge-sm border-primary/20 bg-primary/10 text-primary">
+                      <span className="badge badge-sm shrink-0 border-primary/20 bg-primary/10 text-primary">
                         {item.badge || "Add"}
                       </span>
                     )}
@@ -505,8 +514,8 @@ const ProfilePage = () => {
               </div>
             </div>
 
-            <div className="rounded-lg border border-base-300 bg-base-200 p-5 shadow-sm">
-              <div className="mb-4 flex items-center justify-between">
+            <div className="rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm sm:p-5">
+              <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
                 <h2 className="font-bold">Notifications</h2>
                 <span className="badge border-primary/20 bg-primary/10 text-primary">
                   {notifications.length} new
@@ -519,16 +528,16 @@ const ProfilePage = () => {
                   return (
                     <div
                       key={`${notification.title}-${notification.badge}`}
-                      className="flex gap-3 py-3 first:pt-0 last:pb-0"
+                      className="flex min-w-0 gap-3 py-3 first:pt-0 last:pb-0"
                     >
                       <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
                         <Icon size={18} />
                       </span>
-                      <div>
-                        <p className="font-semibold leading-5">
+                      <div className="min-w-0">
+                        <p className="break-words font-semibold leading-5">
                           {notification.title}
                         </p>
-                        <p className="mt-1 text-sm text-base-content/60">
+                        <p className="mt-1 break-words text-sm text-base-content/60">
                           {notification.detail}
                         </p>
                       </div>
@@ -538,25 +547,28 @@ const ProfilePage = () => {
               </div>
             </div>
 
-            <div className="rounded-lg border border-base-300 bg-base-200 p-5 shadow-sm">
+            <div className="rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm sm:p-5">
               <h2 className="font-bold">Contact status</h2>
               <div className="mt-4 space-y-3 text-sm text-base-content/75">
-                <p className="flex items-center gap-2">
-                  <FiMail className="text-primary" size={16} />
+                <p className="flex items-center gap-2 break-words">
+                  <FiMail className="shrink-0 text-primary" size={16} />
                   Email connected
                 </p>
-                <p className="flex items-center gap-2">
-                  <FiPhone className="text-base-content/40" size={16} />
+                <p className="flex items-center gap-2 break-words">
+                  <FiPhone
+                    className="shrink-0 text-base-content/40"
+                    size={16}
+                  />
                   Phone number not added
                 </p>
               </div>
             </div>
 
-            <div className="rounded-lg border border-base-300 bg-base-200 p-5 shadow-sm">
+            <div className="rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm sm:p-5">
               <h2 className="font-bold">Danger zone</h2>
               <button
                 type="button"
-                className="btn btn-outline mt-4 w-full"
+                className="btn btn-outline mt-4 h-auto min-h-12 w-full whitespace-normal"
                 onClick={signOutHandler}
               >
                 <FiLogOut size={17} />
