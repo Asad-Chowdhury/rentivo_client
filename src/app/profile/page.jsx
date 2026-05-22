@@ -254,17 +254,13 @@ const ProfilePage = () => {
   return (
     <section className="min-h-[calc(100vh-65px)] overflow-x-hidden bg-base-100 text-base-content">
       <div className="relative overflow-hidden border-b border-base-300 bg-primary/10">
-        <div className="absolute -top-8 left-8 size-28 rounded-full bg-primary/15" />
-        <div className="absolute left-[20%] top-14 size-36 rounded-full bg-primary/15" />
-        <div className="absolute -top-9 right-[32%] size-44 rounded-full bg-primary/15" />
-        <div className="absolute right-10 top-4 size-48 rounded-full bg-primary/15" />
-        <div className="relative mx-auto h-32 max-w-7xl sm:h-40" />
+        <div className="relative mx-auto h-28 max-w-7xl sm:h-40" />
       </div>
 
-      <div className="mx-auto max-w-7xl px-3 pb-10 sm:px-6 sm:pb-12 lg:px-8">
+      <div className="mx-auto w-full max-w-7xl px-4 pb-10 sm:px-6 sm:pb-12 lg:px-8">
         <div className="-mt-12 flex flex-col gap-5 sm:-mt-14 lg:flex-row lg:items-end lg:justify-between">
           <div className="flex min-w-0 flex-col items-center gap-4 text-center sm:flex-row sm:items-end sm:text-left">
-            <div className="relative flex size-28 shrink-0 items-center justify-center overflow-hidden rounded-full border-4 border-base-100 bg-base-200 text-3xl font-bold text-primary shadow-sm ring-1 ring-base-300 sm:size-32">
+            <div className="relative flex size-24 shrink-0 items-center justify-center overflow-hidden rounded-full border-4 border-base-100 bg-base-200 text-2xl font-bold text-primary shadow-sm ring-1 ring-base-300 sm:size-32 sm:text-3xl">
               {user.image ? (
                 <Image
                   src={user.image}
@@ -282,20 +278,22 @@ const ProfilePage = () => {
               </span>
             </div>
 
-            <div className="min-w-0 pb-1">
-              <h1 className="break-words text-2xl font-bold tracking-normal sm:text-3xl">
+            <div className="min-w-0 max-w-full pb-1">
+              <h1 className="break-words text-xl font-bold tracking-normal sm:text-3xl">
                 {user.name || "Rentivo User"}
               </h1>
               <p className="mt-1 flex min-w-0 items-center justify-center gap-2 break-all text-sm text-base-content/70 sm:justify-start">
                 <FiMail className="shrink-0" size={15} />
-                {user.email || "No email added"}
+                <span className="min-w-0 break-all">
+                  {user.email || "No email added"}
+                </span>
               </p>
               <div className="mt-3 flex flex-wrap justify-center gap-2 sm:justify-start">
-                <span className="badge border-primary/20 bg-primary/10 text-primary">
+                <span className="badge h-auto min-h-6 max-w-full whitespace-normal border-primary/20 bg-primary/10 text-primary">
                   <FiShield size={13} />
                   {user.emailVerified ? "Verified member" : "Member"}
                 </span>
-                <span className="badge border-base-300 bg-base-200 text-base-content/70">
+                <span className="badge h-auto min-h-6 max-w-full whitespace-normal border-base-300 bg-base-200 text-base-content/70">
                   Joined {formatDate(user.createdAt)}
                 </span>
               </div>
@@ -303,13 +301,16 @@ const ProfilePage = () => {
           </div>
 
           <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-            <button type="button" className="btn btn-outline w-full sm:w-auto">
+            <button
+              type="button"
+              className="btn btn-outline h-auto min-h-12 w-full whitespace-normal sm:w-auto"
+            >
               <FiEdit3 size={17} />
               Edit profile
             </button>
             <button
               type="button"
-              className="btn btn-outline w-full sm:w-auto"
+              className="btn btn-outline h-auto min-h-12 w-full whitespace-normal sm:w-auto"
               onClick={signOutHandler}
             >
               <FiLogOut size={17} />
@@ -318,37 +319,45 @@ const ProfilePage = () => {
           </div>
         </div>
 
-        <div className="mt-7 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-          <div className="rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm sm:p-5">
+        <div className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
+          <div className="min-w-0 rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm sm:p-5">
             <FiTruck className="text-primary" size={22} />
-            <p className="mt-4 break-words text-2xl font-bold sm:mt-5 sm:text-3xl">{cars.length}</p>
+            <p className="mt-4 break-all text-2xl font-bold sm:mt-5 sm:text-3xl">
+              {cars.length}
+            </p>
             <p className="text-sm text-base-content/70">Cars listed</p>
           </div>
-          <div className="rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm sm:p-5">
+          <div className="min-w-0 rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm sm:p-5">
             <FiCalendar className="text-emerald-500" size={22} />
-            <p className="mt-4 break-words text-2xl font-bold sm:mt-5 sm:text-3xl">{bookings.length}</p>
+            <p className="mt-4 break-all text-2xl font-bold sm:mt-5 sm:text-3xl">
+              {bookings.length}
+            </p>
             <p className="text-sm text-base-content/70">Total bookings</p>
           </div>
-          <div className="rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm sm:p-5">
+          <div className="min-w-0 rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm sm:p-5">
             <FiStar className="text-teal-500" size={22} />
-            <p className="mt-4 break-words text-2xl font-bold sm:mt-5 sm:text-3xl">4.9</p>
+            <p className="mt-4 break-all text-2xl font-bold sm:mt-5 sm:text-3xl">
+              4.9
+            </p>
             <p className="text-sm text-base-content/70">Avg. rating</p>
           </div>
-          <div className="rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm sm:p-5">
+          <div className="min-w-0 rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm sm:p-5">
             <FiCreditCard className="text-primary" size={22} />
-            <p className="mt-4 break-words text-2xl font-bold sm:mt-5 sm:text-3xl">${totalEarned}</p>
+            <p className="mt-4 break-all text-2xl font-bold sm:mt-5 sm:text-3xl">
+              ${totalEarned}
+            </p>
             <p className="text-sm text-base-content/70">Total earned</p>
           </div>
         </div>
 
         <div className="mt-5 grid min-w-0 gap-5 lg:grid-cols-[1.25fr_0.8fr]">
-          <div className="space-y-5">
-            <div className="rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm sm:p-5">
+          <div className="min-w-0 space-y-5">
+            <div className="min-w-0 rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm sm:p-5">
               <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
                 <h2 className="font-bold">Account information</h2>
                 <button
                   type="button"
-                  className="btn btn-ghost btn-sm text-primary"
+                  className="btn btn-ghost btn-sm h-auto min-h-9 whitespace-normal text-primary"
                 >
                   <FiEdit3 size={15} />
                   Edit
@@ -358,39 +367,45 @@ const ProfilePage = () => {
               <div className="grid gap-3 sm:grid-cols-2">
                 <div className="min-w-0 rounded-lg bg-base-100 p-4">
                   <p className="text-xs text-base-content/60">Full name</p>
-                  <p className="mt-2 flex min-w-0 items-center gap-2 break-words font-semibold">
+                  <p className="mt-2 flex min-w-0 items-start gap-2 font-semibold">
                     <FiUser
-                      className="shrink-0 text-base-content/50"
+                      className="mt-0.5 shrink-0 text-base-content/50"
                       size={15}
                     />
-                    {user.name || "Rentivo User"}
+                    <span className="min-w-0 break-words">
+                      {user.name || "Rentivo User"}
+                    </span>
                   </p>
                 </div>
                 <div className="min-w-0 rounded-lg bg-base-100 p-4">
                   <p className="text-xs text-base-content/60">Email address</p>
-                  <p className="mt-2 flex min-w-0 items-center gap-2 break-all font-semibold">
+                  <p className="mt-2 flex min-w-0 items-start gap-2 font-semibold">
                     <FiMail
-                      className="shrink-0 text-base-content/50"
+                      className="mt-0.5 shrink-0 text-base-content/50"
                       size={15}
                     />
-                    {user.email || "No email added"}
+                    <span className="min-w-0 break-all">
+                      {user.email || "No email added"}
+                    </span>
                   </p>
                 </div>
                 <div className="min-w-0 rounded-lg bg-base-100 p-4">
                   <p className="text-xs text-base-content/60">
                     Account created
                   </p>
-                  <p className="mt-2 flex min-w-0 items-center gap-2 break-words font-semibold">
+                  <p className="mt-2 flex min-w-0 items-start gap-2 font-semibold">
                     <FiCalendar
-                      className="shrink-0 text-base-content/50"
+                      className="mt-0.5 shrink-0 text-base-content/50"
                       size={15}
                     />
-                    {formatDate(user.createdAt)}
+                    <span className="min-w-0 break-words">
+                      {formatDate(user.createdAt)}
+                    </span>
                   </p>
                 </div>
                 <div className="min-w-0 rounded-lg bg-base-100 p-4">
                   <p className="text-xs text-base-content/60">Email status</p>
-                  <span className="badge mt-2 border-primary/20 bg-primary/10 text-primary">
+                  <span className="badge mt-2 h-auto min-h-6 max-w-full whitespace-normal border-primary/20 bg-primary/10 text-primary">
                     <FiCheckCircle size={13} />
                     {user.emailVerified ? "Verified" : "Not verified"}
                   </span>
@@ -404,7 +419,7 @@ const ProfilePage = () => {
               </div>
             </div>
 
-            <div className="rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm sm:p-5">
+            <div className="min-w-0 rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm sm:p-5">
               <h2 className="font-bold">Quick actions</h2>
               <div className="mt-4 grid gap-3 sm:grid-cols-3">
                 {quickActions.map((action) => {
@@ -424,7 +439,7 @@ const ProfilePage = () => {
                       <h3 className="mt-6 break-words font-bold leading-tight sm:mt-8">
                         {action.title}
                       </h3>
-                      <p className="mt-1 text-sm leading-5 text-base-content/70">
+                      <p className="mt-1 break-words text-sm leading-5 text-base-content/70">
                         {action.description}
                       </p>
                       <span className="mt-4 block text-lg text-base-content/60 transition group-hover:text-primary">
@@ -436,7 +451,7 @@ const ProfilePage = () => {
               </div>
             </div>
 
-            <div className="rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm sm:p-5">
+            <div className="min-w-0 rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm sm:p-5">
               <h2 className="font-bold">Recent activity</h2>
               <div className="mt-4 divide-y divide-base-300">
                 {recentActivity.map((activity) => {
@@ -446,9 +461,9 @@ const ProfilePage = () => {
                   return (
                     <div
                       key={key}
-                      className="flex flex-col items-start justify-between gap-3 py-3 first:pt-0 last:pb-0 sm:flex-row sm:items-center sm:gap-4"
+                      className="flex min-w-0 flex-col items-start justify-between gap-3 py-3 first:pt-0 last:pb-0 sm:flex-row sm:items-center sm:gap-4"
                     >
-                      <div className="flex min-w-0 items-center gap-3">
+                      <div className="flex w-full min-w-0 items-start gap-3">
                         <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
                           <Icon size={18} />
                         </span>
@@ -461,7 +476,7 @@ const ProfilePage = () => {
                           </p>
                         </div>
                       </div>
-                      <span className="badge max-w-full shrink-0 whitespace-normal border-primary/20 bg-primary/10 text-primary">
+                      <span className="badge h-auto min-h-6 max-w-full shrink-0 whitespace-normal border-primary/20 bg-primary/10 text-primary">
                         {activity.badge}
                       </span>
                     </div>
@@ -472,7 +487,7 @@ const ProfilePage = () => {
           </div>
 
           <aside className="min-w-0 space-y-5">
-            <div className="rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm sm:p-5">
+            <div className="min-w-0 rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm sm:p-5">
               <h2 className="font-bold">Profile completeness</h2>
               <p className="mt-1 text-sm text-base-content/70">
                 Add more info to increase trust with renters.
@@ -497,7 +512,7 @@ const ProfilePage = () => {
                         className={`shrink-0 ${item.complete ? "text-primary" : ""}`}
                         size={15}
                       />
-                      {item.label}
+                      <span className="min-w-0 break-words">{item.label}</span>
                     </span>
                     {item.complete ? (
                       <FiCheckCircle
@@ -505,7 +520,7 @@ const ProfilePage = () => {
                         size={16}
                       />
                     ) : (
-                      <span className="badge badge-sm shrink-0 border-primary/20 bg-primary/10 text-primary">
+                      <span className="badge badge-sm h-auto min-h-5 shrink-0 whitespace-normal border-primary/20 bg-primary/10 text-primary">
                         {item.badge || "Add"}
                       </span>
                     )}
@@ -514,10 +529,10 @@ const ProfilePage = () => {
               </div>
             </div>
 
-            <div className="rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm sm:p-5">
+            <div className="min-w-0 rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm sm:p-5">
               <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
                 <h2 className="font-bold">Notifications</h2>
-                <span className="badge border-primary/20 bg-primary/10 text-primary">
+                <span className="badge h-auto min-h-6 whitespace-normal border-primary/20 bg-primary/10 text-primary">
                   {notifications.length} new
                 </span>
               </div>
@@ -547,24 +562,26 @@ const ProfilePage = () => {
               </div>
             </div>
 
-            <div className="rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm sm:p-5">
+            <div className="min-w-0 rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm sm:p-5">
               <h2 className="font-bold">Contact status</h2>
               <div className="mt-4 space-y-3 text-sm text-base-content/75">
-                <p className="flex items-center gap-2 break-words">
-                  <FiMail className="shrink-0 text-primary" size={16} />
-                  Email connected
+                <p className="flex items-start gap-2">
+                  <FiMail className="mt-0.5 shrink-0 text-primary" size={16} />
+                  <span className="min-w-0 break-words">Email connected</span>
                 </p>
-                <p className="flex items-center gap-2 break-words">
+                <p className="flex items-start gap-2">
                   <FiPhone
-                    className="shrink-0 text-base-content/40"
+                    className="mt-0.5 shrink-0 text-base-content/40"
                     size={16}
                   />
-                  Phone number not added
+                  <span className="min-w-0 break-words">
+                    Phone number not added
+                  </span>
                 </p>
               </div>
             </div>
 
-            <div className="rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm sm:p-5">
+            <div className="min-w-0 rounded-lg border border-base-300 bg-base-200 p-4 shadow-sm sm:p-5">
               <h2 className="font-bold">Danger zone</h2>
               <button
                 type="button"
